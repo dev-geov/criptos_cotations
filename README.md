@@ -8,9 +8,9 @@
 
 **Como funciona:**
 * clone o projeto em um diretório da sua máquina.
-* rode o comando *python cripto.py [-opção_desejada]*
+* rode o comando *python cripto.py -opção*
 
 **Resultado**
-- -h *Lista de ajuda*
-- -l *Lista de criptomoedas*
-- c 'XXX' onde XXX é a sigla da criptomoeda
+- $ python cripto.py -h *Lista de ajuda*
+- $ python cripto.py -l *Lista de criptomoedas*
+- $ python cripto.py -c BTC *onde BTC é a sigla da criptomoeda*
