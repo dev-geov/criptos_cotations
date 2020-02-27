@@ -1,7 +1,6 @@
 #External libraries
 from bs4 import BeautifulSoup
 import requests
-import re
 from datetime import datetime
 
 
