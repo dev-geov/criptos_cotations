@@ -11,6 +11,7 @@
 * rode o comando *python cripto.py -opção*
 
 **Resultado**
-- $ python cripto.py -h *Lista de ajuda*
-- $ python cripto.py -l *Lista de criptomoedas*
-- $ python cripto.py -c BTC *onde BTC é a sigla da criptomoeda*
+- $ python cripto.py -h *Lista de ajuda* Exibe os comandos e como usar
+- $ python cripto.py -l *Lista de criptomoedas* Lista todas as criptomoedas disponiveis para consulta
+- $ python cripto.py -c BTC *onde BTC é a sigla da criptomoeda* Exibe dados da respectiva criptomoeda e sua cotação
+- $ python cripto.py -a BTC *Resumo da criptomoeda* Exibe um breve resumo da criptomoeda
