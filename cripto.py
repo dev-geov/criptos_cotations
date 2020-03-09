@@ -1,5 +1,5 @@
 #Internal modules
-from functions.functions import start_cotations, start_scrapping, display
+from functions.functions import start_cotations, start_scrapping, display, get_about_cripto
 
 #Core modules
 import sys
@@ -18,7 +18,7 @@ def start():
     try:
         argument = str(sys.argv[1])
     except:
-        print("Você deve fornecer um argumento válido. Use --help")
+        print("Você deve fornecer um argumento válido.\nUse python cripto.py -h ...")
         return
     
     header = "=============| Cotação de Criptomoeda |===============".format(argument)
@@ -26,16 +26,18 @@ def start():
         print(header)
 
         if argument == '-h':
+            print("Opções:")
+            print()
             print(
-                "\nOpções: \n-h 'Comando de ajuda'\n"
-                "-l 'Ver Criptos disponiveis'\n"
-                "-c 'XXX' 'Formato Criptomoeda'\n"
+                "-a 'XXX' História da Critpomoeda\n"
+                "-h 'Comando de ajuda'\n"
+                "-l 'Ver Criptomoedas disponiveis'\n"
+                "-c 'XXX' Ver infos da Criptomoeda\n"
             )
         elif argument == '-l':
             print("Criptos disponiveis:")
             argument = None
-            for key in cotations.keys():
-                display(argument, cotations)
+            display(argument, cotations)
         elif argument == '-c':
             cripto = None
             try:
@@ -48,6 +50,15 @@ def start():
                 print("Digite uma cripto no formato similar 'XXX'")
             else:
                 print("Criptomoeda fora de cotação...")
+        elif argument == '-a':
+            name = str(sys.argv[2]).upper()
+            if name in cotations.keys():
+                name = cotations[name]['name']
+                about = get_about_cripto(name)
+                print("About: {}".format(name))
+                print(about)
+            else:
+                print("Criptomoeda desconhecida...")
         else:
             print("Opção inválida!")
         print("=" * len(header))
