@@ -1,5 +1,5 @@
 #Internal modules
-from functions.functions import start_cotations, start_scrapping, display, get_about_cripto
+from functions.functions import *
 
 #Core modules
 import sys
@@ -9,41 +9,39 @@ def start():
         Function to start displaying Cripto cotations
     """
 
-    #Criptos names and criptos prices lists
+    # Criptos names and criptos prices lists
     criptos = start_scrapping('http://coinbase.com/price')
 
-    #initialize variable to store criptos cotations
+    # initialize variable to store criptos cotations
     cotations = start_cotations(criptos)
 
     try:
         argument = str(sys.argv[1])
-    except:
+    except LookupError as e:
+        print(e)
         print("Você deve fornecer um argumento válido.\nUse python cripto.py -h ...")
         return
     
     header = "=============| Cotação de Criptomoeda |===============".format(argument)
     if argument:
         print(header)
-
         if argument == '-h':
-            print("Opções:")
-            print()
-            print(
-                "-a 'XXX' História da Critpomoeda\n"
-                "-h 'Comando de ajuda'\n"
-                "-l 'Ver Criptomoedas disponiveis'\n"
-                "-c 'XXX' Ver infos da Criptomoeda\n"
-            )
+            menu()
         elif argument == '-l':
-            print("Criptos disponiveis:")
+            total = 50
+            if len(sys.argv) == 3:
+                try:
+                    total = int(sys.argv[2])
+                except:
+                    pass
+            print("{} Criptos disponiveis:".format(total))
             argument = None
-            display(argument, cotations)
+            display(argument, cotations, total)
         elif argument == '-c':
-            cripto = None
-            try:
+            if len(sys.argv) == 3:
                 cripto = str(sys.argv[2]).upper()
-            except:
-                pass
+            else:
+                cripto = None
             if cripto is not None and cripto in cotations.keys():
                 display(cripto, cotations)
             elif cripto is None:
@@ -52,13 +50,14 @@ def start():
                 print("Criptomoeda fora de cotação...")
         elif argument == '-a':
             name = str(sys.argv[2]).upper()
-            if name in cotations.keys():
-                name = cotations[name]['name']
-                about = get_about_cripto(name)
-                print("About: {}".format(name))
-                print(about)
-            else:
-                print("Criptomoeda desconhecida...")
+            get_about_cripto(name, cotations)
+        elif argument == '-s':
+            name = None
+            try:
+                name = sys.argv[2]
+            except IndexError:
+                name = None
+            write_csv(cotations, name=name)
         else:
             print("Opção inválida!")
         print("=" * len(header))
