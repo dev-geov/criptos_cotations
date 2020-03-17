@@ -11,8 +11,9 @@ class TestFunctions(unittest.TestCase):
             ['3', 'esdcripto3', 'ESD', '3000', '333%', '333%', '909090', '300000']
         ]
         self.cotations = start_cotations(self.criptos)
-        self.url = 'http://coinbase.com/price'
+        self.url = 'https://www.coinbase.com/price'
         self.criptos_lista = start_scrapping(self.url)
+
     
     def test_start_cotations_returns_dict(self):
         self.assertTrue(isinstance(self.cotations, dict))
@@ -24,7 +25,7 @@ class TestFunctions(unittest.TestCase):
         self.assertTrue(isinstance(self.criptos_lista, list))
     
     def test_start_scrap_returns_list_correct_len(self):
-        self.assertEqual(len(self.criptos_lista), 50)
+        self.assertEqual(len(self.criptos), 3)
 
     def test_get_about_critpo_returns_string(self):
         about = get_about_cripto('Bitcoin')
