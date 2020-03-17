@@ -52,7 +52,12 @@ def start():
             name = str(sys.argv[2]).upper()
             get_about_cripto(name, cotations)
         elif argument == '-s':
-            write_csv(cotations)
+            name = None
+            try:
+                name = sys.argv[2]
+            except IndexError:
+                name = None
+            write_csv(cotations, name=name)
         else:
             print("Opção inválida!")
         print("=" * len(header))

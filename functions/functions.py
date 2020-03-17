@@ -80,9 +80,16 @@ def display(argument=None, cotations=None, total=None):
 
 
 
-def write_csv(cotations):
+def write_csv(cotations, name=None):
     list_cotations = []
-    filename = 'cotations.csv'
+    filename = None
+    if name is not None:
+        if not name.endswith('.csv'):
+            filename = '{}.csv'.format(name)
+        else:
+            filename = name
+    else:
+        filename = 'cotations.csv'
     for key, value in cotations.items():
         list_cotations.append(value)
 
