@@ -119,7 +119,7 @@ def convert_real(cripto, value, base, cotations):
         print("Preço: R$ {}".format(cripto_price))
         print("Valor: R$ {}".format(value))
         converted = value / cripto_price
-        print("Conversão: {} {}".format(cripto, converted))
+        print("Conversão: {} {:.5f}".format(cripto, converted))
 
 
 def menu():
