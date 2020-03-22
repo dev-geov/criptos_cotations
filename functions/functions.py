@@ -1,9 +1,10 @@
 #External libraries
-from bs4 import BeautifulSoup
-import requests
-from datetime import datetime
-from googletrans import Translator
 import csv
+from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
+from googletrans import Translator
+
 
 
 def start_cotations(criptos=None):
@@ -25,7 +26,7 @@ def start_cotations(criptos=None):
 def start_scrapping(url):
     criptos = []
     # store response from requests.get
-    html = requests.get(url)
+    html = requests.get(url, timeout=3000)
     if html.status_code == 200:
         # create a BeatifulSoup object
         bs = BeautifulSoup(html.content, 'html.parser')
@@ -103,13 +104,33 @@ def write_csv(cotations, name=None):
     except IOError:
         print("Error ao criar arquivo CSV!")
 
+
+def convert_real(cripto, value, base, cotations):
+    cripto_price = cotations[cripto]['price'].replace(',', '')
+    cripto_price = float(cripto_price.replace('R$', ''))
+    if base == 'f':
+        print("Conversão de {} para Real".format(cotations[cripto]['name']))
+        print("Preço: R$ {}".format(cripto_price))
+        print("Valor: {} {}".format(cripto, value))
+        converted = value * cripto_price
+        print("Conversão: R$ {:.2f}".format(converted))
+    else:
+        print("Conversão de Real para {}".format(cotations[cripto]['name']))
+        print("Preço: R$ {}".format(cripto_price))
+        print("Valor: R$ {}".format(value))
+        converted = value / cripto_price
+        print("Conversão: {} {}".format(cripto, converted))
+
+
 def menu():
     print("Opções:")
     print()
     print(
-        "-a 'XXX' História da Critpomoeda\n"
-        "-h 'Comando de ajuda'\n"
-        "-l 'Ver Criptomoedas disponiveis'\n"
-        "-c 'XXX' Ver cotação da Criptomoeda\n"
-        "-s 'CSV' Salvar arquivo CSV\n"
+        "-a História da Critpomoeda. Ex: python cripto.py -a BTC\n"
+        "-ct Para converter Real para Cripto. Ex: python cripto.py ct BTC 200\n"
+        "-cf Para converter Cripto para Real. Ex: python cripto.py cf BTC 200\n"
+        "-d Ver cotação da Criptomoeda. Ex: python cripto.py -d BTC\n"
+        "-h Comando de ajuda. Ex: python cripto.py -h\n"
+        "-l Lista de Criptomoedas disponiveis. Ex: python cripto.py -l\n"
+        "-s Salvar arquivo CSV. Ex: python cripto.py -s cotations.csv\n"
     )

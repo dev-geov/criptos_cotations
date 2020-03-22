@@ -18,18 +18,18 @@ def start():
     try:
         argument = str(sys.argv[1])
     except LookupError as e:
-        print(e)
         print("Você deve fornecer um argumento válido.\nUse python cripto.py -h ...")
         return
     
     header = "=============| Cotação de Criptomoeda |===============".format(argument)
     if argument:
         print(header)
+        
         if argument == '-h':
             menu()
         elif argument == '-l':
             total = 50
-            if len(sys.argv) == 3:
+            if len(sys.argv) >= 3:
                 try:
                     total = int(sys.argv[2])
                 except:
@@ -37,7 +37,7 @@ def start():
             print("{} Criptos disponiveis:".format(total))
             argument = None
             display(argument, cotations, total)
-        elif argument == '-c':
+        elif argument == '-d':
             if len(sys.argv) == 3:
                 cripto = str(sys.argv[2]).upper()
             else:
@@ -48,6 +48,20 @@ def start():
                 print("Digite uma cripto no formato similar 'XXX'")
             else:
                 print("Criptomoeda fora de cotação...")
+        elif 'c' in argument:
+            if argument[-1] and argument[-1] == 't' or argument[-1] == 'f':
+                cripto = None
+                value = None
+                if len(sys.argv) > 3:
+                    cripto = str(sys.argv[2]).upper()
+                    value = float(sys.argv[3])
+                base = argument[-1]
+                if cripto is not None and value is not None and cripto in cotations.keys():
+                    convert_real(cripto, value, base, cotations)
+                else:
+                    print("Parametros insuficiente para conversão...")
+            else:
+                print("Argumento -c deve ser combinado com 't' ou 'f'...")
         elif argument == '-a':
             name = str(sys.argv[2]).upper()
             get_about_cripto(name, cotations)
