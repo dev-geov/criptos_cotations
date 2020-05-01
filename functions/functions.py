@@ -5,7 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 from googletrans import Translator
 
-
+def convert_string_value_to_real(value):
+    return float(value.replace('R$', '').replace(',', ''))
 
 def start_cotations(criptos=None):
     cotations = {}
@@ -39,6 +40,14 @@ def start_scrapping(url):
     return []
 
 
+def get_dollar_value(url):
+    html = requests.get(url, timeout=3000)
+    if html.status_code == 200:
+        bs = BeautifulSoup(html.content, 'html.parser')
+        content = bs.find('input', {'id': 'nacional'})
+        return float(content['value'].replace(',', '.'))
+    return 0.0
+
 def get_about_cripto(name, cotations):
     cripto_name = cotations[name]['name']
     url = 'https://coinmarketcap.com/pt-br/currencies/{}/'.format(cripto_name)
@@ -65,11 +74,16 @@ def get_about_cripto(name, cotations):
 def display(argument=None, cotations=None, total=None):
     date = datetime.now()
     if argument is not None:
+        dolar = get_dollar_value('https://dolarhoje.com/')
+        real = convert_string_value_to_real(cotations[argument]['price'])
+        dolar_value = real / dolar
+        
         print("Data: {}".format(date.strftime("%d-%m-%Y - %H:%M:%S")))
         print("Sigla: {}".format(cotations[argument]['abbr']))
         print('POS: {}'.format(cotations[argument]['pos']))
         print("Cripto: {}".format(cotations[argument]['name']))
-        print("Preço: {}".format(cotations[argument]['price']))
+        print("Preço: R$ {:.2f}".format(real))
+        print("Dolar: US$ {:.2f}".format(dolar_value))
         print("Var %: {}".format(cotations[argument]['var']))
         print("MCap: {}".format(cotations[argument]['mcap']))
     elif total is not None and isinstance(total, int):
@@ -108,19 +122,26 @@ def write_csv(cotations, name=None):
 def convert_real(cripto, value, base, cotations):
     cripto_price = cotations[cripto]['price'].replace(',', '')
     cripto_price = float(cripto_price.replace('R$', ''))
+    date = datetime.now().strftime("%d-%m-%Y - %H:%M:%S")
     if base == 'f':
-        print("Conversão de {} para Real".format(cotations[cripto]['name']))
+        print("Data: {}".format(date))
+        print("Conversão de {} para Real/Dólar".format(cotations[cripto]['name']))
+        print()
         print("Preço: R$ {}".format(cripto_price))
         print("Valor: {} {}".format(cripto, value))
         converted = value * cripto_price
-        print("Conversão: R$ {:.2f}".format(converted))
+        print("Real: R$ {:.2f}".format(converted))
+        dolar = get_dollar_value('https://dolarhoje.com/')
+        dolar_value = converted / dolar
+        print("Dolar: US$ {:.2f}".format(dolar_value))
     else:
+        print("Data: {}".format(date))
         print("Conversão de Real para {}".format(cotations[cripto]['name']))
+        print()
         print("Preço: R$ {}".format(cripto_price))
         print("Valor: R$ {}".format(value))
         converted = value / cripto_price
         print("Conversão: {} {:.5f}".format(cripto, converted))
-
 
 def menu():
     print("Opções:")

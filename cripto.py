@@ -1,8 +1,21 @@
-#Internal modules
-from functions.functions import *
+"""
+    Main cripto file
+"""
 
 #Core modules
 import sys
+
+#Internal modules
+from functions.functions import (
+    convert_real,
+    display,
+    get_about_cripto,
+    get_dollar_value,
+    menu,
+    start_cotations,
+    start_scrapping,
+    write_csv
+)
 
 def start():
     """
@@ -14,17 +27,15 @@ def start():
 
     # initialize variable to store criptos cotations
     cotations = start_cotations(criptos)
+    header = "=============| Cotação de Criptomoeda |==============="
+    argument = None
 
     try:
         argument = str(sys.argv[1])
-    except LookupError as e:
-        print("Você deve fornecer um argumento válido.\nUse python cripto.py -h ...")
-        return
-    
-    header = "=============| Cotação de Criptomoeda |===============".format(argument)
+    except LookupError:
+        print("Use 'python cripto.py -h' para obter ajuda...")
     if argument:
         print(header)
-        
         if argument == '-h':
             menu()
         elif argument == '-l':
@@ -32,7 +43,7 @@ def start():
             if len(sys.argv) >= 3:
                 try:
                     total = int(sys.argv[2])
-                except:
+                except IndexError:
                     pass
             print("{} Criptos disponiveis:".format(total))
             argument = None
@@ -44,6 +55,9 @@ def start():
                 cripto = None
             if cripto is not None and cripto in cotations.keys():
                 display(cripto, cotations)
+            elif cripto in ('USD', 'DOLAR'):
+                dolar = get_dollar_value('https://dolarhoje.com/')
+                print("Dolar hoje: R${}".format(dolar))
             elif cripto is None:
                 print("Digite uma cripto no formato similar 'XXX'")
             else:
@@ -78,4 +92,3 @@ def start():
 
 if __name__ == '__main__':
     start()
-
